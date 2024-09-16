@@ -8,20 +8,20 @@ def get_club_data(club_slug):
     # Requête combinée pour récupérer les données principales et supplémentaires
     query = '''
     {
-      football {
-        club(slug: "''' + club_slug + '''") {
-          activeMemberships {
-            nodes {
-              player {
-                displayName
-                position
-                averageScore(type: LAST_FIFTEEN_SO5_AVERAGE_SCORE)
-                u23Eligible
-              }
+        football {
+            club(slug: "''' + club_slug + '''") {
+                activeMemberships {
+                    nodes {
+                        player {
+                            displayName
+                            position
+                            averageScore(type: LAST_FIFTEEN_SO5_AVERAGE_SCORE)
+                            u23Eligible
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
     '''
 
@@ -46,7 +46,7 @@ def get_club_data(club_slug):
                         'Score moyen (15 derniers SO5)': player['averageScore'],
                         'Éligible U23': "Oui" if player['u23Eligible'] else "Non"
                     })
-                
+
                 # Création du DataFrame
                 df = pd.DataFrame(players_data)
                 return df
@@ -56,7 +56,7 @@ def get_club_data(club_slug):
             st.write(f"Erreur : structure inattendue dans la réponse de l'API pour le club {club_slug}.")
     except requests.exceptions.RequestException as e:
         st.write("Erreur lors de la requête à l'API:", e)
-    
+
     return pd.DataFrame()
 
 # Afficher l'interface utilisateur
