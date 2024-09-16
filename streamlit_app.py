@@ -31,9 +31,6 @@ def get_club_members(club_slug):
         response = requests.post(url, **options)
         data = response.json()
 
-        # Debugging output
-        st.write("Réponse brute de l'API :", data)
-
         if 'data' in data and 'football' in data['data'] and 'club' in data['data']['football']:
             memberships = data['data']['football']['club']['activeMemberships']['nodes']
             if memberships:
