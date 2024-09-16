@@ -32,25 +32,28 @@ def get_club_data(club_slug):
         response = requests.post(url, **options)
         data = response.json()
 
-        if data is not None and 'data' in data and 'football' in data['data'] and 'club' in data['data']['football']:
-            memberships = data['data']['football']['club']['activeMembers']
-            if memberships:
-                players_data = []
-                for node in memberships:
-                    player = node['player']
-                    players_data.append({
-                        'Nom du joueur': player['displayName'],
-                        'Position': player['position'],
-                        'Score moyen (15 derniers SO5)': player['averageScore'],
-                        'Éligible U23': "Oui" if player['u23Eligible'] else "Non"
-                    })
+        if data is not None:
+            if 'data' in data and 'football' in data['data'] and 'club' in data['data']['football']:
+                memberships = data['data']['football']['club']['activeMembers']
+                if memberships:
+                    players_data = []
+                    for node in memberships:
+                        player = node['player']
+                        players_data.append({
+                            'Nom du joueur': player['displayName'],
+                            'Position': player['position'],
+                            'Score moyen (15 derniers SO5)': player['averageScore'],
+                            'Éligible U23': "Oui" if player['u23Eligible'] else "Non"
+                        })
 
-                df = pd.DataFrame(players_data)
-                return df
+                    df = pd.DataFrame(players_data)
+                    return df
+                else:
+                    st.write(f"Aucun membre actif trouvé pour le club {club_slug}.")
             else:
-                st.write(f"Aucun membre actif trouvé pour le club {club_slug}.")
+                st.write(f"Erreur : structure inattendue dans la réponse de l'API pour le club {club_slug}.")
         else:
-            st.write(f"Erreur : structure inattendue dans la réponse de l'API pour le club {club_slug}.")
+            st.write("Aucune donnée reçue de l'API.")
     except requests.exceptions.RequestException as e:
         st.write("Erreur lors de la requête à l'API:", e)
 
