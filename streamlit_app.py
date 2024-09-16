@@ -31,17 +31,24 @@ def get_club_members(club_slug):
         response = requests.post(url, **options)
         data = response.json()
 
-        st.write("Données récupérées via l'API pour le club", club_slug, ":")
-        if 'data' in data and data['data']['football']['club']['activeMemberships']['nodes']:
-            for node in data['data']['football']['club']['activeMemberships']['nodes']:
-                player = node['player']
-                st.write("Nom du joueur:", player['displayName'])
-                st.write("Position:", player['position'])
-                st.write("Score moyen (derniers 15 matchs):", player['averageScore'])
-                st.write("Éligible U23:", "Oui" if player['u23Eligible'] else "Non")
-                st.write("------------")
+        # Debugging output
+        st.write("Réponse brute de l'API :", data)
+
+        if 'data' in data and 'football' in data['data'] and 'club' in data['data']['football']:
+            memberships = data['data']['football']['club']['activeMemberships']['nodes']
+            if memberships:
+                st.write(f"Membres actifs du club {club_slug} :")
+                for node in memberships:
+                    player = node['player']
+                    st.write("Nom du joueur:", player['displayName'])
+                    st.write("Position:", player['position'])
+                    st.write("Score moyen (15 derniers SO5):", player['averageScore'])
+                    st.write("Éligible U23:", "Oui" if player['u23Eligible'] else "Non")
+                    st.write("------------")
+            else:
+                st.write(f"Aucun membre actif trouvé pour le club {club_slug}.")
         else:
-            st.write("Erreur: Aucune donnée valide récupérée pour le club", club_slug)
+            st.write(f"Erreur : structure inattendue dans la réponse de l'API pour le club {club_slug}.")
     except requests.exceptions.RequestException as e:
         st.write("Erreur lors de la requête à l'API:", e)
 
