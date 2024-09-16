@@ -4,6 +4,7 @@ import requests
 def get_club_members(club_slug):
     url = 'https://api.sorare.com/federation/graphql'
     
+    # Nouvelle requête GraphQL
     query = '''
     {
       football {
@@ -13,8 +14,6 @@ def get_club_members(club_slug):
               player {
                 displayName
                 position
-                averageScore(type: LAST_FIFTEEN_SO5_AVERAGE_SCORE)
-                u23Eligible
               }
             }
           }
@@ -42,8 +41,6 @@ def get_club_members(club_slug):
                     player = node['player']
                     st.write("Nom du joueur:", player['displayName'])
                     st.write("Position:", player['position'])
-                    st.write("Score moyen (15 derniers SO5):", player['averageScore'])
-                    st.write("Éligible U23:", "Oui" if player['u23Eligible'] else "Non")
                     st.write("------------")
             else:
                 st.write(f"Aucun membre actif trouvé pour le club {club_slug}.")
