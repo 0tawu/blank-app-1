@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 def get_club_members(club_slug):
     url = 'https://api.sorare.com/federation/graphql'
@@ -36,12 +37,21 @@ def get_club_members(club_slug):
         if 'data' in data and 'football' in data['data'] and 'club' in data['data']['football']:
             memberships = data['data']['football']['club']['activeMemberships']['nodes']
             if memberships:
-                st.write(f"Membres actifs du club {club_slug} :")
+                # Récupération des informations des joueurs
+                players_data = []
                 for node in memberships:
                     player = node['player']
-                    st.write("Nom du joueur:", player['displayName'])
-                    st.write("Position:", player['position'])
-                    st.write("------------")
+                    players_data.append({
+                        'Nom du joueur': player['displayName'],
+                        'Position': player['position']
+                    })
+                
+                # Création du DataFrame
+                df = pd.DataFrame(players_data)
+                
+                # Affichage du tableau dans Streamlit
+                st.write(f"Membres actifs du club {club_slug} :")
+                st.dataframe(df)
             else:
                 st.write(f"Aucun membre actif trouvé pour le club {club_slug}.")
         else:
