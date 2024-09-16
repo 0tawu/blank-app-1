@@ -5,27 +5,27 @@ def page_accueil():
     st.title("Page d'Accueil")
     st.write("Bienvenue sur la page d'accueil!")
 
-def page_profil():
+def page_player():
     st.title("Page Profil")
     st.write("Ceci est votre profil.")
 
-def page_parametres():
+def page_team():
     st.title("Page Paramètres")
     st.write("Voici les paramètres de votre application.")
 
 # Créer une barre de navigation pour changer de page
 page = st.sidebar.selectbox(
     "Navigation",
-    ("Accueil", "Profil", "Paramètres")
+    ("Accueil", "Search player", "Search team")
 )
 
 # Afficher la page sélectionnée
 if page == "Accueil":
     page_accueil()
-elif page == "Profil":
-    page_profil()
-elif page == "Paramètres":
-    page_parametres()
+elif page == "Search player":
+    page_player()
+elif page == "Search team":
+    page_team()
 
 def get_so5_scores(player_slug):
     url = 'https://api.sorare.com/federation/graphql'
